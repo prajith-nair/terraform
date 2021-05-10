@@ -12,16 +12,29 @@ resource "aws_launch_configuration" "lab" {
   image_id        = "ami-0c55b159cbfafe1f0"
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.instance.id]
-  user_data       = <<-EOF
-    #!/bin/bash
-    echo "Terraform world" > index.html
-    nohup busybox httpd -f -p ${var.server_port} &
-    EOF
+  user_data = data.template_file.user_data.rendered
+  /*
+user_data       = <<-EOF
+  #!/bin/bash
+  echo "Terraform world" >> index.html
+  echo "${data.terraform_remote_state.db.outputs.address}" >> index.html
+  echo "${data.terraform_remote_state.db.outputs.port}" >> index.html
+  nohup busybox httpd -f -p ${var.server_port} &
+  EOF
+*/
   lifecycle {
     create_before_destroy = true
   }
 }
 
+data "terraform_remote_state" "db" {
+  backend = "s3"
+  config = {
+    bucket = "tf-prajith-bucket"
+    key    = "dev/data-store/mysql/terraform.tfstate"
+    region = "us-east-2"
+  }
+}
 resource "aws_autoscaling_group" "asglab" {
   launch_configuration = aws_launch_configuration.lab.name
   vpc_zone_identifier  = data.aws_subnet_ids.default.ids
@@ -36,6 +49,14 @@ resource "aws_autoscaling_group" "asglab" {
   }
 }
 
+data "template_file" "user_data" {
+  template = file("user-data.sh")
+  vars = {
+    server_port = var.server_port
+    db_address  = data.terraform_remote_state.db.outputs.address
+    db_port     = data.terraform_remote_state.db.outputs.port
+  }
+}
 
 resource "aws_security_group" "instance" {
   name = "terraform-sg"
