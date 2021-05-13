@@ -3,7 +3,7 @@ variable "aws_secret_key" {}
 
 provider "aws" {
   profile = "prajithnairsolutions"
-  region = "us-east-2"
+  region  = "us-east-2"
 }
 
 resource "aws_launch_configuration" "lab" {
@@ -33,6 +33,7 @@ data "terraform_remote_state" "db" {
     region = "us-east-2"
   }
 }
+
 resource "aws_autoscaling_group" "asglab" {
   launch_configuration = aws_launch_configuration.lab.name
   vpc_zone_identifier  = data.aws_subnet_ids.default.ids
@@ -44,6 +45,15 @@ resource "aws_autoscaling_group" "asglab" {
     key                 = "Name"
     value               = var.cluster_name
     propagate_at_launch = true
+  }
+
+  dynamic "tag" {
+    for_each = var.custom_tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
   }
 }
 
