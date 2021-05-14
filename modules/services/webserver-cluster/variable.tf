@@ -19,26 +19,26 @@ variable "max_size" {
 
 variable "cluster_name" {
   description = "The name to use for all the cluster resources"
-  type = string
+  type        = string
 }
 
 variable "db_remote_state_bucket" {
   description = "The name of the S3 bucket for the database's remote state"
-  type = string
+  type        = string
 }
 
 variable "db_remote_state_key" {
   description = "The path for the database's remote state in S3"
-  type = string
+  type        = string
 }
 
 variable "region" {
   description = "The region where ASG will be launching Ec2"
-  type = string
+  type        = string
 }
 
 variable "custom_tags" {
   description = "Custom tags to set on the Instances in the ASG"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }

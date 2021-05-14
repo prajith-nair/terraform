@@ -1,5 +1,5 @@
 variable "user_names" {
   description = "Create IAM users with these names"
-  type = list(string)
-  default = ["hulk","ironman","thor"]
+  type        = list(string)
+  default     = ["hulk", "ironman", "thor"]
 }

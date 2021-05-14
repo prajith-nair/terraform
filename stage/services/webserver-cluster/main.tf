@@ -1,6 +1,6 @@
 provider "aws" {
   profile = "prajithnairsolutions"
-  region = "us-east-2"
+  region  = "us-east-2"
 }
 
 module "webserver_cluster" {
@@ -10,10 +10,15 @@ module "webserver_cluster" {
   db_remote_state_key    = "stage/data-store/mysql/terraform.tfstate"
   instance_type          = "t2.micro"
   min_size               = 2
-  max_size               = 2
+  max_size               = 3
+  enable_autoscaling     = true
+  custom_tags = {
+    Owner      = "prajith"
+    DeployedBy = "terraform"
+  }
+  region         = "us-east-2"
   aws_access_key = ""
   aws_secret_key = ""
-  region = "us-east-2"
 }
 
 resource "aws_security_group_rule" "allow_testing_inbound" {
