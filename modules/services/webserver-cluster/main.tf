@@ -32,9 +32,9 @@ resource "aws_autoscaling_group" "asglab" {
   name = "${var.cluster_name}-${aws_launch_configuration.lab.name}"
 
   launch_configuration = aws_launch_configuration.lab.name
-  vpc_zone_identifier = data.aws_subnet_ids.default.ids
+  vpc_zone_identifier  = data.aws_subnet_ids.default.ids
   target_group_arns = [
-    aws_alb_target_group.asg_target.arn]
+  aws_alb_target_group.asg_target.arn]
   health_check_type = "ELB"
 
   max_size = var.max_size
@@ -45,8 +45,8 @@ resource "aws_autoscaling_group" "asglab" {
     create_before_destroy = true
   }
   tag {
-    key = "Name"
-    value = var.cluster_name
+    key                 = "Name"
+    value               = var.cluster_name
     propagate_at_launch = true
   }
 }
@@ -61,7 +61,6 @@ data "template_file" "user_data" {
     server_text = var.server_text
   }
 }
-
 
 data "template_file" "user_data_v2" {
   count    = var.enable_new_user_data ? 1 : 0
