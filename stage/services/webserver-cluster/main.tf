@@ -11,7 +11,7 @@ module "webserver_cluster" {
   instance_type          = "t2.micro"
   min_size               = 2
   max_size               = 3
-  enable_autoscaling     = true
+  enable_autoscaling     = false
   custom_tags = {
     Owner      = "prajith"
     DeployedBy = "terraform"
@@ -19,6 +19,7 @@ module "webserver_cluster" {
   region         = "us-east-2"
   aws_access_key = ""
   aws_secret_key = ""
+  enable_new_user_data = false
 }
 
 resource "aws_security_group_rule" "allow_testing_inbound" {

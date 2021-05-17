@@ -10,3 +10,4 @@ output "upper_names" {
 output "shorter_upper_names" {
   value = [for names in var.user_names : upper(name) if length(name) < 3]
 }
+

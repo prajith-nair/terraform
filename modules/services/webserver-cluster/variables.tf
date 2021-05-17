@@ -42,3 +42,20 @@ variable "custom_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_new_user_data" {
+  description = "If set to true, use the V2 User Data script"
+  type        = bool
+}
+
+variable "ami" {
+  description = "The AMI to run in the cluster"
+  default     = "ami-0c55b159cbfafe1f0"
+  type        = string
+}
+
+variable "server_text" {
+  description = "The text the webserver should return"
+  default     = "Hello Terraformers!"
+  type        = string
+}
