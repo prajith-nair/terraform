@@ -10,17 +10,15 @@ module "webserver_cluster" {
   db_remote_state_key    = "stage/data-store/mysql/terraform.tfstate"
   instance_type          = "t2.micro"
   min_size               = 2
-  max_size               = 3
-  enable_autoscaling     = false
-  custom_tags = {
-    Owner      = "prajith"
-    DeployedBy = "terraform"
-  }
-  region         = "us-east-2"
-  aws_access_key = ""
-  aws_secret_key = ""
-  enable_new_user_data = false
+  max_size               = 2
+  region                 = "us-east-2"
+  aws_access_key         = ""
+  aws_secret_key         = ""
+  ami                    = "ami-0c55b159cbfafe1f0"
+  server_text            = "New Server"
+  enable_new_user_data   = false
 }
+
 
 resource "aws_security_group_rule" "allow_testing_inbound" {
   from_port         = 9001

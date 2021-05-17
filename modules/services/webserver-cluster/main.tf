@@ -10,9 +10,7 @@ resource "aws_launch_configuration" "lab" {
   image_id        = var.ami
   instance_type   = var.instance_type
   security_groups = [aws_security_group.instance.id]
-
-  user_data = (length(data.template_file.user_data[*] > 0 ? data.template_file.user_data[0].rendered : data
-  .template_file.user_data_v2[0].rendered))
+  user_data = data.template_file.user_data.rendered
 
   lifecycle {
     create_before_destroy = true
@@ -52,7 +50,6 @@ resource "aws_autoscaling_group" "asglab" {
 }
 
 data "template_file" "user_data" {
-  count    = var.enable_new_user_data ? 0 : 1
   template = file("${path.module}/user-data.sh")
   vars = {
     server_port = var.server_port
@@ -62,13 +59,6 @@ data "template_file" "user_data" {
   }
 }
 
-data "template_file" "user_data_v2" {
-  count    = var.enable_new_user_data ? 1 : 0
-  template = file("${path.module}/user-data.sh")
-  vars = {
-    server_port = var.server_port
-  }
-}
 
 resource "aws_security_group" "instance" {
   name = "${var.cluster_name}-instance"
