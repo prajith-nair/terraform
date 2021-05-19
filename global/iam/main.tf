@@ -5,12 +5,14 @@ provider "aws" {
   profile = "prajithnairsolutions"
   region  = "us-east-2"
 }
+
 resource "aws_iam_user" "tfdemouser" {
   for_each = toset(var.user_names)
   name     = each.value
   #count = length(var.user_names)
   #name = var.user_names[count.index]
 }
+
 resource "aws_iam_policy" "cloudwatch_read_only" {
   name   = "cloudwatch_read_only"
   policy = data.aws_iam_policy_document.cloudwatch_read_only.json
